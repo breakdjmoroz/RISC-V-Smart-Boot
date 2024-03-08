@@ -3,8 +3,7 @@
 int main()
 {
   rvprintf("Hello, %s\n", "World!");
-  int num = 35;
-  rvprintf("Number %d\n", &num);
-  rvprintf("Y", "");
+  unsigned int a = 123456789u;
+  rvprintf("Number %d\n", &a);
   return 0;
 }

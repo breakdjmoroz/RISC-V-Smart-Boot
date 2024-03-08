@@ -21,32 +21,53 @@ void rvprintstring(const char* string)
   }
 }
 
-void rvprintnumber(const int number)
+void rvprintnumber(const unsigned int number)
 {
   char digit = '\0';
   int temp = number;
 
-  while (temp > 0)
-  {
-    __asm__
-      (
-       "addi a0, zero, 0xA\n\t"
-       "addi t0, zero, 0x0\n\t"
-       "lw t1, %1\n\t"
-       "jal zero, mod\n"
-       "subtract:\n\t"
-       "sub t1, t1, a0\n\t"
-       "addi t0, t0, 0x1\n"
-       "mod:\n\t"
-       "slt t2, t1, a0\n\t"
-       "beq zero, t2, subtract\n\t"
-       "sb t1, %0\n\t"
-       "sw t0, %1\n"
-       : "+m" (digit)
-       : "m" (temp)
-       );
-    rvputc(digit + 0x30);
-  }
+  __asm__
+    (
+     "lw a2, %1\n\t"
+     : "+m" (temp)
+     );
+
+  __asm__
+    (
+     "li a7, 0x10000000\n\t"
+     "addi sp, sp, 0x20\n\t"
+     "addi a1, zero, 0x0\n\t"
+
+     "getdigits:\n\t"
+     "addi a0, zero, 0xA\n\t"
+     "addi t0, zero, 0x0\n\t"
+     "mv t1, a2\n\t"
+     "jal zero, mod\n"
+
+     "subtract:\n\t"
+     "sub t1, t1, a0\n\t"
+     "addi t0, t0, 0x1\n"
+
+     "mod:\n\t"
+     "slt t2, t1, a0\n\t"
+     "beq zero, t2, subtract\n\t"
+     "addi sp, sp, -0x1\n\t"
+     "addi a1, a1, 0x1\n\t"
+     "sb t1, (sp)\n\t"
+     "mv a2, t0\n\t"
+     "bne zero, a2, getdigits\n"
+
+     "putdigits:\n\t"
+     "lb t2, (sp)\n\t"
+     "addi t2, t2, 0x30\n\t"
+     "sb t2, (a7)\n\t"
+     "add sp, sp, t1\n\t"
+     "addi a1, a1, -0x1\n\t"
+     "slti t0, a1, 0x1\n\t"
+     "beq zero, t0, putdigits\n"
+     
+     "addi sp, sp, -0x20\n\t"
+     );
 
 }
 
@@ -64,7 +85,7 @@ void rvprintf(const char* fstring, const void* value)
           rvprintstring((char*)value);
           break;
         case 'd':
-          rvprintnumber(*(int*)value);
+          rvprintnumber(*(unsigned int*)value);
           break;
       }
       ++cur_c;
