@@ -5,5 +5,5 @@ MEMORY
 
 SECTIONS
 {
-	.text : {fsbl.obj(.text)} > entry_point
+	.text : {obj/fsbl.obj(.text)} > entry_point
 }
