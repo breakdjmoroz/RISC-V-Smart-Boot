@@ -10,9 +10,9 @@ GCC_LDSCRIPT=main.ld
 AS_LDSCRIPT=entry.ld
 
 																		#architecture configuration
-MABI=ilp32
-MARCH=rv32i_zicsr
-TARGET=elf32-littleriscv
+MABI=lp64
+MARCH=rv64i_zicsr
+TARGET=elf64-littleriscv
 
 EMU=qemu-system-riscv64
 EMU_MACHINE=virt
@@ -56,5 +56,5 @@ generate_dir:
 	if [ ! -d $(EXECUT_DIR) ]; then mkdir $(EXECUT_DIR); fi
 
 clean:
-	if [ -d $(OBJECT_DIR) ]; then rm $(OBJECT_DIR)*; fi
-	if [ -d $(EXECUT_DIR) ]; then rm $(EXECUT_DIR)*; fi
+	if [ -d $(OBJECT_DIR) ]; then rm $(OBJECT_DIR)/*; fi
+	if [ -d $(EXECUT_DIR) ]; then rm $(EXECUT_DIR)/*; fi
