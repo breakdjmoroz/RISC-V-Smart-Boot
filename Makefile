@@ -30,25 +30,25 @@ GCC_LFLAGS=-b $(TARGET) -T $(GCC_LDSCRIPT)
 AS_LFLAGS=-b $(TARGET) -T $(AS_LDSCRIPT)
 EMU_FLAGS=-machine $(EMU_MACHINE)
 
-SOURCE=$(wildcard *.c)
-ASMSRC=$(wildcarc *.s)
+SOURCE=$(wildcard $(SOURCE_DIR)/*.c)
+ASMSRC=$(wildcard $(SOURCE_DIR)/*.s)
 OBJECT=*.o
 ASMOBJ=*.obj
 HEADER=*.h
 
-all: compile | link run
+all: compile link run
 
-build: compile | link
+build: compile link
 
-link: generate_dir | compile
+link: generate_dir  compile
 	$(LD) $(GCC_LFLAGS) $(OBJECT_DIR)/$(OBJECT) -o $(EXECUT_DIR)/$(PROGRAM_NAME)
 	$(LD) $(AS_LFLAGS) $(OBJECT_DIR)/$(ASMOBJ) -o $(EXECUT_DIR)/$(ENTRY_NAME)
 
-compile: generate_dir $(HEADER_DIR)/$(HEADER)
-	$(foreach SRC, $(SOURCE), $(GCC) $(GCC_CFLAGS) $(SOURCE_DIR)/$(SRC) -o $(OBJECT_DIR)/$(SRC:%.c=%.o);)
-	$(foreach SRC, $(ASMSRC), $(AS) $(GCC_CFLAGS) $(SOURCE_DIR)/$(SRC) -o $(OBJECT_DIR)/$(SRC:%.s=%.obj);)
+compile:
+	$(foreach SRC, $(SOURCE), $(GCC) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.c=$(OBJECT_DIR)/%.o);)
+	$(foreach SRC, $(ASMSRC), $(AS) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.s=$(OBJECT_DIR)/%.obj);)
 
-run: compile | link
+run: compile link
 	$(EMU) $(EMU_FLAGS) -bios $(EXECUT_DIR)/$(ENTRY_NAME) -kernel $(EXECUT_DIR)/$(PROGRAM_NAME)
 
 generate_dir:
