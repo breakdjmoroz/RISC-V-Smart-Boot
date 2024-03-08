@@ -38,6 +38,8 @@ HEADER=*.h
 
 all: compile | link run
 
+build: compile | link
+
 link: generate_dir | compile
 	$(LD) $(GCC_LFLAGS) $(OBJECT_DIR)/$(OBJECT) -o $(EXECUT_DIR)/$(PROGRAM_NAME)
 	$(LD) $(AS_LFLAGS) $(OBJECT_DIR)/$(ASMOBJ) -o $(EXECUT_DIR)/$(ENTRY_NAME)
