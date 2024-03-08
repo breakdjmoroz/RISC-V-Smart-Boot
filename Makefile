@@ -25,8 +25,9 @@ HEADER_DIR=hdr
 EXECUT_DIR=exe
 
 																		#flags
-GCC_CFLAGS=-march=$(MARCH) -mabi=$(MABI) -c
+GCC_CFLAGS=-mcmodel=medany -march=$(MARCH) -mabi=$(MABI) -c
 GCC_LFLAGS=-b $(TARGET) -T $(GCC_LDSCRIPT)
+AS_CFLAGS=-march=$(MARCH) -mabi=$(MABI) -c
 AS_LFLAGS=-b $(TARGET) -T $(AS_LDSCRIPT)
 EMU_FLAGS=-machine $(EMU_MACHINE)
 
@@ -46,7 +47,7 @@ link: generate_dir  compile
 
 compile:
 	$(foreach SRC, $(SOURCE), $(GCC) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.c=$(OBJECT_DIR)/%.o);)
-	$(foreach SRC, $(ASMSRC), $(AS) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.s=$(OBJECT_DIR)/%.obj);)
+	$(foreach SRC, $(ASMSRC), $(AS) $(AS_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.s=$(OBJECT_DIR)/%.obj);)
 
 run: compile link
 	$(EMU) $(EMU_FLAGS) -bios $(EXECUT_DIR)/$(ENTRY_NAME) -kernel $(EXECUT_DIR)/$(PROGRAM_NAME)
