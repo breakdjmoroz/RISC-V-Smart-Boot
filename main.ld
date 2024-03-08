@@ -6,7 +6,6 @@ MEMORY
 SECTIONS
 {
 	.text : {*.o(.text)} > bootloader_space
-  .rodata : . {*.o(.rodata)}
   .data . : {*.o(.data)}
   .bss . : {*.o(.bss)}
 }
