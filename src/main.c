@@ -1,10 +1,9 @@
 #include "../hdr/rvio.h"
+#include "../hdr/tests.h"
 
 void test()
 {
-  rv_prints("Hello, %s\n", "World!");
-  unsigned int a = 123456789u;
-  rv_printu("Number %d\n", a);
+  rvio_test();
 }
 
 int main()
