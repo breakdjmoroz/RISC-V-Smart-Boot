@@ -23,6 +23,7 @@ SOURCE_DIR=src
 OBJECT_DIR=obj
 HEADER_DIR=hdr
 EXECUT_DIR=exe
+TEST_DIR=tst
 
 																		#flags
 GCC_CFLAGS=-mcmodel=medany -march=$(MARCH) -mabi=$(MABI) -c
@@ -32,21 +33,23 @@ AS_LFLAGS=-b $(TARGET) -T $(AS_LDSCRIPT)
 EMU_FLAGS=-machine $(EMU_MACHINE)
 
 SOURCE=$(wildcard $(SOURCE_DIR)/*.c)
+TESTSRC=$(wildcard $(TEST_DIR)/*.c)
 ASMSRC=$(wildcard $(SOURCE_DIR)/*.s)
 OBJECT=*.o
 ASMOBJ=*.obj
-HEADER=*.h
+HEADER=$(wildcard $(HEADER_DIR)/*.h)
 
 all: compile link run
 
 build: compile link
 
-link: generate_dir  compile
+link: generate_dir compile
 	$(LD) $(GCC_LFLAGS) $(OBJECT_DIR)/$(OBJECT) -o $(EXECUT_DIR)/$(PROGRAM_NAME)
 	$(LD) $(AS_LFLAGS) $(OBJECT_DIR)/$(ASMOBJ) -o $(EXECUT_DIR)/$(ENTRY_NAME)
 
 compile:
 	$(foreach SRC, $(SOURCE), $(GCC) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.c=$(OBJECT_DIR)/%.o);)
+	$(foreach SRC, $(TESTSRC), $(GCC) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(TEST_DIR)/%.c=$(OBJECT_DIR)/%.o);)
 	$(foreach SRC, $(ASMSRC), $(AS) $(AS_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.s=$(OBJECT_DIR)/%.obj);)
 
 run: compile link
