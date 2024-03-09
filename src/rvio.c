@@ -71,7 +71,7 @@ void rvprintnumber(const unsigned int number)
 
 }
 
-void rvprintf(const char* fstring, const void* value)
+void rvprints(const char* fstring, const char* value)
 {
   char* cur_c = (char*)fstring;
   while (*cur_c != '\0')
@@ -79,14 +79,29 @@ void rvprintf(const char* fstring, const void* value)
     if (*cur_c == '%')
     {
       ++cur_c;
-      switch (*cur_c)
+      if (*cur_c == 's')
       {
-        case 's':
-          rvprintstring((char*)value);
-          break;
-        case 'd':
-          rvprintnumber(*(unsigned int*)value);
-          break;
+          rvprintstring(value);
+      }
+      ++cur_c;
+    }
+
+    rvputc(*cur_c);
+    ++cur_c;
+  }
+}
+
+void rvprintu(const char* fstring, const unsigned int value)
+{
+  char* cur_c = (char*)fstring;
+  while (*cur_c != '\0')
+  {
+    if (*cur_c == '%')
+    {
+      ++cur_c;
+      if (*cur_c == 'd')
+      {
+          rvprintnumber(value);
       }
       ++cur_c;
     }

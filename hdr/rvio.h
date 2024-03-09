@@ -2,6 +2,7 @@
 #define RVIO
 
 void rvputc(const char);
-void rvprintf(const char*, const void*);
+void rvprints(const char*, const char*);
+void rvprintu(const char*, const unsigned int);
 
 #endif
