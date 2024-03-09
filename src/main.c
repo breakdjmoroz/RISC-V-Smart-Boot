@@ -2,9 +2,9 @@
 
 void test()
 {
-  rvprints("Hello, %s\n", "World!");
+  rvprints("Hello, %s\n\r", "World!");
   unsigned int a = 123456789u;
-  rvprintu("Number %d\n", a);
+  rvprintu("Number %d\n\r", a);
 }
 
 int main()
