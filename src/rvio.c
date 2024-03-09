@@ -1,6 +1,6 @@
 #include "../hdr/rvio.h"
 
-void rvputc(const char c)
+void rv_putc(const char c)
 {
   __asm__
     (
@@ -11,17 +11,17 @@ void rvputc(const char c)
      );
 }
 
-void rvprintstring(const char* string)
+void printstring(const char* string)
 {
   char* cur_c = (char*)string;
   while (*cur_c != '\0')
   {
-    rvputc(*cur_c);
+    rv_putc(*cur_c);
     ++cur_c;
   }
 }
 
-void rvprintnumber(const unsigned int number)
+void printnumber(const unsigned int number)
 {
   char digit = '\0';
   int temp = number;
@@ -71,7 +71,7 @@ void rvprintnumber(const unsigned int number)
 
 }
 
-void rvprints(const char* fstring, const char* value)
+void rv_prints(const char* fstring, const char* value)
 {
   char* cur_c = (char*)fstring;
   while (*cur_c != '\0')
@@ -81,17 +81,17 @@ void rvprints(const char* fstring, const char* value)
       ++cur_c;
       if (*cur_c == 's')
       {
-          rvprintstring(value);
+          printstring(value);
       }
       ++cur_c;
     }
 
-    rvputc(*cur_c);
+    rv_putc(*cur_c);
     ++cur_c;
   }
 }
 
-void rvprintu(const char* fstring, const unsigned int value)
+void rv_printu(const char* fstring, const unsigned int value)
 {
   char* cur_c = (char*)fstring;
   while (*cur_c != '\0')
@@ -101,12 +101,12 @@ void rvprintu(const char* fstring, const unsigned int value)
       ++cur_c;
       if (*cur_c == 'd')
       {
-          rvprintnumber(value);
+          printnumber(value);
       }
       ++cur_c;
     }
 
-    rvputc(*cur_c);
+    rv_putc(*cur_c);
     ++cur_c;
   }
 }

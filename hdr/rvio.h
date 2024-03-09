@@ -1,8 +1,8 @@
 #ifndef RVIO
 #define RVIO
 
-void rvputc(const char);
-void rvprints(const char*, const char*);
-void rvprintu(const char*, const unsigned int);
+void rv_putc(const char);
+void rv_prints(const char*, const char*);
+void rv_printu(const char*, const unsigned int);
 
 #endif
