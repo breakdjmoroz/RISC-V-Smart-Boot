@@ -52,6 +52,9 @@ compile:
 run: compile link
 	$(EMU) $(EMU_FLAGS) -bios $(EXECUT_DIR)/$(ENTRY_NAME) -kernel $(EXECUT_DIR)/$(PROGRAM_NAME)
 
+debug:
+	$(EMU) $(EMU_FLAGS) -s -S -bios $(EXECUT_DIR)/$(ENTRY_NAME) -kernel $(EXECUT_DIR)/$(PROGRAM_NAME)
+
 generate_dir:
 	if [ ! -d $(OBJECT_DIR) ]; then mkdir $(OBJECT_DIR); fi
 	if [ ! -d $(EXECUT_DIR) ]; then mkdir $(EXECUT_DIR); fi
