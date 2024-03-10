@@ -21,7 +21,7 @@ void printstring(const char* string)
   }
 }
 
-void printnumber(const unsigned int number)
+void printu(const unsigned int number)
 {
   char digit = '\0';
   int temp = number;
@@ -91,7 +91,7 @@ void rv_prints(const char* fstring, const char* value)
   }
 }
 
-void rv_printu(const char* fstring, const unsigned int value)
+void rv_printd(const char* fstring, const unsigned int value)
 {
   char* cur_c = (char*)fstring;
   while (*cur_c != '\0')
@@ -101,7 +101,7 @@ void rv_printu(const char* fstring, const unsigned int value)
       ++cur_c;
       if (*cur_c == 'd')
       {
-          printnumber(value);
+          printu(value);
       }
       ++cur_c;
     }
