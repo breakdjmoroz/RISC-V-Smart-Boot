@@ -99,9 +99,11 @@ void rv_printd(const char* fstring, const unsigned int value)
     if (*cur_c == '%')
     {
       ++cur_c;
-      if (*cur_c == 'd')
+      switch (*cur_c)
       {
+        case 'u':
           printu(value);
+          break;
       }
       ++cur_c;
     }
