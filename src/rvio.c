@@ -107,13 +107,13 @@ void rv_printd(const char* fstring, const unsigned int value)
       switch (*cur_c)
       {
         case 'u':
-          printu(value, 10u);
+          printu(value, DEC_BASE);
           break;
         case 'b':
-          printu(value, 2u);
+          printu(value, BIN_BASE);
           break;
         case 'x':
-          printu(value, 16u);
+          printu(value, HEX_BASE);
           break;
       }
       ++cur_c;
