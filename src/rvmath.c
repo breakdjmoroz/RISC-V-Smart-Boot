@@ -7,7 +7,9 @@ unsigned int i_div(const unsigned int a, const unsigned int b)
      	"div:\n\t"
 	"ADD t0, zero, a0\n\t"
 	"ADD t1, zero, a1\n\t"
+	"ADD t2, zero, 0\n\t"
 
+	  
 	"loop_div:\n\t"
 	"BLT t0, t1, end_div\n\t"
 	"SUB t0, t0, t1\n\t"
