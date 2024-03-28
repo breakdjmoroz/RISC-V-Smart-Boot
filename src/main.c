@@ -4,6 +4,10 @@
 void test()
 {
   rvio_test();
+
+  unsigned int a = 10;
+  unsigned int b = 3;
+  division_test(a, b);
 }
 
 int main()
