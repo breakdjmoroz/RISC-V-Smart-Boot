@@ -21,7 +21,7 @@ void printstring(const char* string)
   }
 }
 
-void printu(const unsigned int number)
+void printu(const unsigned int number, const unsigned int base)
 {
   char digit = '\0';
   int temp = number;
@@ -35,11 +35,10 @@ void printu(const unsigned int number)
   __asm__
     (
      "li a7, 0x10000000\n\t"
-     "addi sp, sp, 0x20\n\t"
      "addi a1, zero, 0x0\n\t"
 
      "getdigits:\n\t"
-     "addi a0, zero, 0xA\n\t"
+     "add a0, zero, %0\n\t"
      "addi t0, zero, 0x0\n\t"
      "mv t1, a2\n\t"
      "jal zero, mod\n"
@@ -49,8 +48,7 @@ void printu(const unsigned int number)
      "addi t0, t0, 0x1\n"
 
      "mod:\n\t"
-     "slt t2, t1, a0\n\t"
-     "beq zero, t2, subtract\n\t"
+     "bge t1, a0, subtract\n\t"
      "addi sp, sp, -0x1\n\t"
      "addi a1, a1, 0x1\n\t"
      "sb t1, (sp)\n\t"
@@ -59,14 +57,21 @@ void printu(const unsigned int number)
 
      "putdigits:\n\t"
      "lb t2, (sp)\n\t"
-     "addi t2, t2, 0x30\n\t"
-     "sb t2, (a7)\n\t"
-     "add sp, sp, t1\n\t"
+
+     "addi a6, zero, 0xA\n\t"
+     "blt t2, a6, ten\n\t"
+     "addi t2, t2, 0x37\n\t"
+     "jal zero, store\n"
+
+     "ten: addi t2, t2, 0x30\n\t"
+
+     "store: sb t2, (a7)\n\t"
+     "add sp, sp, 0x1\n\t"
      "addi a1, a1, -0x1\n\t"
      "slti t0, a1, 0x1\n\t"
      "beq zero, t0, putdigits\n"
-     
-     "addi sp, sp, -0x20\n\t"
+     :
+     : "r" (base)
      );
 
 }
@@ -99,9 +104,17 @@ void rv_printd(const char* fstring, const unsigned int value)
     if (*cur_c == '%')
     {
       ++cur_c;
-      if (*cur_c == 'd')
+      switch (*cur_c)
       {
-          printu(value);
+        case 'u':
+          printu(value, DEC_BASE);
+          break;
+        case 'b':
+          printu(value, BIN_BASE);
+          break;
+        case 'x':
+          printu(value, HEX_BASE);
+          break;
       }
       ++cur_c;
     }
