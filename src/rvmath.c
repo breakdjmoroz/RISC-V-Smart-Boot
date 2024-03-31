@@ -2,11 +2,12 @@
 
 unsigned int i_div(const unsigned int a, const unsigned int b)  
 {
+  unsigned int result = (unsigned int)a;
   __asm__
     (
      	"div:\n\t"
-	"ADD t0, zero, a0\n\t"
-	"ADD t1, zero, a1\n\t"
+	"ADD t0, zero, %0\n\t"
+	"ADD t1, zero, %1\n\t"
 	"ADD t2, zero, 0\n\t"
 
 	  
@@ -17,19 +18,21 @@ unsigned int i_div(const unsigned int a, const unsigned int b)
 	"JAL zero, loop_div\n\t"
 
 	"end_div:\n\t"
-	"ADD a0, zero, t2\n\t"
-	"ret \n"
-
+	"ADD %0, zero, t2\n\t"
+  : "+r" (result)
+  : "r" (b)
      );
+  return result;
 }
 
 unsigned int i_mod(const unsigned int a,const unsigned int b)
 {
+  unsigned int result = (unsigned int)a;
   __asm__
     (
      	"mod:\n\t"
-	"ADD t0, zero, a0\n\t"
-	"ADD t1, zero, a1\n\t"
+	"ADD t0, zero, %0\n\t"
+	"ADD t1, zero, %1\n\t"
 
 	"loop_mod:"
 	"BLT t0, t1, end_mod\n\t"
@@ -37,7 +40,10 @@ unsigned int i_mod(const unsigned int a,const unsigned int b)
 	"JAL zero, loop_mod\n\t"
 
 	"end_mod:\n\t"
-	"ADD a0, zero, t0\n\t"
-	"ret \n"
+	"ADD %0, zero, t0\n\t"
+  : "+r" (result)
+  : "r" (b)
      );
+
+  return result;
 }
