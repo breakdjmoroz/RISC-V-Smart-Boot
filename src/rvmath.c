@@ -12,7 +12,7 @@ unsigned int i_div(const unsigned int a, const unsigned int b)
 
 	  
 	"loop_div:\n\t"
-	"BLT t0, t1, end_div\n\t"
+	"BLTU t0, t1, end_div\n\t"
 	"SUB t0, t0, t1\n\t"
 	"ADDI t2, t2, 1\n\t"
 	"JAL zero, loop_div\n\t"
@@ -35,7 +35,7 @@ unsigned int i_mod(const unsigned int a,const unsigned int b)
 	"ADD t1, zero, %1\n\t"
 
 	"loop_mod:"
-	"BLT t0, t1, end_mod\n\t"
+	"BLTU t0, t1, end_mod\n\t"
 	"SUB t0, t0, t1\n\t"
 	"JAL zero, loop_mod\n\t"
 
