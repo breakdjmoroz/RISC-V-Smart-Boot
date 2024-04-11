@@ -26,7 +26,7 @@ EXECUT_DIR=exe
 TEST_DIR=tst
 
 																		#flags
-GCC_CFLAGS=-mcmodel=medany -march=$(MARCH) -mabi=$(MABI) -c
+GCC_CFLAGS=-mcmodel=medany -march=$(MARCH) -mabi=$(MABI) -g -c
 GCC_LFLAGS=-b $(TARGET) -T $(GCC_LDSCRIPT)
 AS_CFLAGS=-march=$(MARCH) -mabi=$(MABI) -c
 AS_LFLAGS=-b $(TARGET) -T $(AS_LDSCRIPT)
