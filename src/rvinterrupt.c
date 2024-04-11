@@ -47,3 +47,15 @@ void print_mcause()
   rv_printd("interrupt: %u\n\r", interrupt);
   rv_printd("exception code: %u\n\r", exception_code);
 }
+
+unsigned long long get_mepc() {
+    unsigned long long mepc;
+    __asm__ __volatile__ ("csrr %0, mepc" : "=r" (mepc));
+    return mepc;
+}
+
+void print_mepc(){
+  unsigned long long mepc = get_mepc();
+  rv_printd("Mepc: %x\n\r", mepc);
+}
+

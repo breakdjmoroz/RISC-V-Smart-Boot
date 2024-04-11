@@ -4,5 +4,6 @@
 #include "../hdr/rvinterrupt.h"
 
 void mcause_test();
+void mepc_test();
 
 #endif
