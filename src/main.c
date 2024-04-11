@@ -10,6 +10,9 @@ void test()
   division_test(a, b);
 
   mcause_test();
+  
+  rvminfo_test();
+  mepc_test();
 }
 
 int main()
