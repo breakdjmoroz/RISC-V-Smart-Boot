@@ -3,12 +3,12 @@
 
 unsigned long long get_mip() {
     unsigned long long mip;
-    __asm__ __volatile__ ("csrr %0, mepc" : "=r" (mip));
+    __asm__ __volatile__ ("csrr %0, mip" : "=r" (mip));
     return mip;
 }
 unsigned long long get_mie() {
     unsigned long long mie;
-    __asm__ __volatile__ ("csrr %0, mepc" : "=r" (mie));
+    __asm__ __volatile__ ("csrr %0, mie" : "=r" (mie));
     return mie;
 }
 unsigned long long get_mcause()
