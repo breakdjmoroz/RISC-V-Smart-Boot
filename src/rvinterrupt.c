@@ -1,31 +1,10 @@
 #include "../hdr/rvinterrupt.h"
 #include "../hdr/rvio.h"
-
-unsigned long long get_mip() {
-    unsigned long long mip;
-    __asm__ __volatile__ ("csrr %0, mip" : "=r" (mip));
-    return mip;
-}
-unsigned long long get_mie() {
-    unsigned long long mie;
-    __asm__ __volatile__ ("csrr %0, mie" : "=r" (mie));
-    return mie;
-}
-unsigned long long get_mcause()
-{
-  unsigned long long mcause;
-
-  __asm__ (
-      "csrr %0, mcause\n\t"
-      : "+r" (mcause)
-      );
-
-  return mcause;
-}
+#include "../hdr/register.h"
 
 void print_mcause()
 {
-  unsigned long long mcause = get_mcause();
+  unsigned long long mcause = csr_read(MCAUSE);
 
   rv_printd("Mcause: %x\n\r", mcause);
 
@@ -71,19 +50,21 @@ void print_mepc(){
 
 void print_mip()
 {
-  unsigned long long mip = get_mip();
+  //unsigned long long mip = get_mip();
+
+  unsigned long long mip = csr_read(MIP);
   rv_printd("mip: %x\n\r", mip);
 
   rv_printd("MSIP (Machine Software Interrupt Pending): %u\n\r", (mip & (1 << 0)) != 0);
-  rv_printd("MTIP (Machine Timer Interrupt Pending): %u\n\r", (mip & (1 << 7)) != 0);
-  rv_printd("MEIP (Machine External Interrupt Pending):  %u\n\r", (mip & (1 << 11)) != 0);
+  rv_printd("MTIP (Machine Timer Interrupt Pending):    %u\n\r", (mip & (1 << 7)) != 0);
+  rv_printd("MEIP (Machine External Interrupt Pending): %u\n\r", (mip & (1 << 11)) != 0);
 }
 
 void print_mie(){
-  unsigned long long mie = get_mie();
+  unsigned long long mie = csr_read(MIE);
   rv_printd("mie: %x\n\r", mie);
 
   rv_printd("MSIE (Machine Software Interrupt Pending): %u\n\r", (mie & (1 << 3)) != 0);
-  rv_printd("MTIE (Machine Timer Interrupt Pending): %u\n\r", (mie & (1 << 7)) != 0);
-  rv_printd("MEIE (Machine External Interrupt Pending):  %u\n\r", (mie & (1 << 11)) != 0);
+  rv_printd("MTIE (Machine Timer Interrupt Pending):    %u\n\r", (mie & (1 << 7)) != 0);
+  rv_printd("MEIE (Machine External Interrupt Pending): %u\n\r", (mie & (1 << 11)) != 0);
 }
