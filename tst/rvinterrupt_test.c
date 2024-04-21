@@ -9,3 +9,8 @@ void mepc_test()
 {
   print_mepc();
 }
+void mip_enable_test()
+{
+  print_mip();
+  print_mie();
+}
