@@ -1,14 +1,12 @@
 #include "../hdr/rvio.h"
 #include "../hdr/rvminfo.h"
+#include "../hdr/rvinterrupt.h"
+#include "../hdr/rvinterrupt.h"
+#include "../hdr/register.h"
 
-unsigned long long get_mstatus() {
-    unsigned long long mstatus;
-    __asm__ __volatile__ ("csrr %0, mstatus" : "=r" (mstatus));
-    return mstatus;
-}
 
 void print_mstatus() {
-    unsigned long long mstatus = get_mstatus();
+    unsigned long long mstatus = csr_read(MSTATUS);
     rv_printd("Mstatus (hexademical): %x\n\r", mstatus);
 
     // Вывод расшифровки
@@ -40,7 +38,7 @@ void print_mstatus() {
 
 void set_mstatus_bit(int bit_number, int value) {
     unsigned long long mask = 1u << bit_number;
-    unsigned long long mstatus_value = get_mstatus();
+    unsigned long long mstatus_value = csr_read(MSTATUS);
     // Установка или сброс заданного бита в зависимости от значения
     if (value)
         mstatus_value |= mask;  // Установка бита
