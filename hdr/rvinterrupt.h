@@ -1,8 +1,14 @@
 #ifndef INTERRUPT
 #define INTERRUPT
 
-unsigned long long get_mcause();
+
+
 void print_mcause();
+void print_mepc();
+void print_mip();
+void print_mie();
+
+
 
 #endif
 
