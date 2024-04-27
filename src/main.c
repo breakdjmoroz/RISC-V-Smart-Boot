@@ -15,6 +15,7 @@ void test()
   mepc_test();
   rvmisa_test();
   rvmhartid_test();
+  mip_enable_test();
 }
 
 int main()
