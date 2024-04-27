@@ -13,6 +13,8 @@ void test()
   
   rvminfo_test();
   mepc_test();
+  rvmisa_test();
+  rvmhartid_test();
 }
 
 int main()
