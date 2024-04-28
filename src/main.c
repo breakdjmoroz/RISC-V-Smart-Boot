@@ -8,6 +8,14 @@ void test()
   unsigned int a = 10;
   unsigned int b = 3;
   division_test(a, b);
+
+  mcause_test();
+  
+  rvminfo_test();
+  mepc_test();
+  rvmisa_test();
+  rvmhartid_test();
+  mip_enable_test();
 }
 
 int main()

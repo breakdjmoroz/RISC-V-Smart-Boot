@@ -1,14 +1,22 @@
+#include "../hdr/uart.h"
 #include "../hdr/rvio.h"
+#include "../hdr/rvmath.h"
 
 void rv_putc(const char c)
 {
+#define address(num) to_str(num)
+#define to_str(num) #num
+
   __asm__
     (
-     "li a1, 0x10000000\n\t"
+     "li a1, " address(UART_THR) "\n\t"
      "sb %0, (a1)\n"
      :
      : "r" (c)
      );
+
+#undef to_str(num)
+#undef address(num)
 }
 
 void printstring(const char* string)
@@ -21,59 +29,53 @@ void printstring(const char* string)
   }
 }
 
-void printu(const unsigned int number, const unsigned int base)
+void printu(const unsigned long long number, const unsigned long long base)
 {
   char digit = '\0';
-  int temp = number;
+  unsigned long long temp = (unsigned long long)number;
 
-  __asm__
-    (
-     "lw a2, %1\n\t"
-     : "+m" (temp)
-     );
+  unsigned int i = 0;
 
-  __asm__
-    (
-     "li a7, 0x10000000\n\t"
-     "addi a1, zero, 0x0\n\t"
+  if (number != 0)
+  {
+    while (temp > 0)
+    {
+      digit = i_mod(temp, base);
 
-     "getdigits:\n\t"
-     "add a0, zero, %0\n\t"
-     "addi t0, zero, 0x0\n\t"
-     "mv t1, a2\n\t"
-     "jal zero, mod\n"
+      __asm__ (
+          "addi sp, sp, -0x4\n\t"
+          "sw %0, (sp)\n\t"
+          : "=r" (digit)
+          );
 
-     "subtract:\n\t"
-     "sub t1, t1, a0\n\t"
-     "addi t0, t0, 0x1\n"
+      ++i;
+      temp = i_div(temp, base);
+    }
 
-     "mod:\n\t"
-     "bge t1, a0, subtract\n\t"
-     "addi sp, sp, -0x1\n\t"
-     "addi a1, a1, 0x1\n\t"
-     "sb t1, (sp)\n\t"
-     "mv a2, t0\n\t"
-     "bne zero, a2, getdigits\n"
+    while (i > 0)
+    {
+      __asm__ (
+          "lw %0, (sp)\n\t"
+          "addi sp, sp, 0x4\n\t"
+          : "+r" (digit)
+          );
 
-     "putdigits:\n\t"
-     "lb t2, (sp)\n\t"
+      --i;
 
-     "addi a6, zero, 0xA\n\t"
-     "blt t2, a6, ten\n\t"
-     "addi t2, t2, 0x37\n\t"
-     "jal zero, store\n"
-
-     "ten: addi t2, t2, 0x30\n\t"
-
-     "store: sb t2, (a7)\n\t"
-     "add sp, sp, 0x1\n\t"
-     "addi a1, a1, -0x1\n\t"
-     "slti t0, a1, 0x1\n\t"
-     "beq zero, t0, putdigits\n"
-     :
-     : "r" (base)
-     );
-
+      if (base == HEX_BASE && digit > 10)
+      {
+        rv_putc(digit + A_CHARACTER);
+      }
+      else
+      {
+        rv_putc(digit + ZERO_CHARACTER);
+      }
+    }
+  }
+  else
+  {
+   rv_putc(ZERO_CHARACTER);
+  }
 }
 
 void rv_prints(const char* fstring, const char* value)
@@ -96,7 +98,7 @@ void rv_prints(const char* fstring, const char* value)
   }
 }
 
-void rv_printd(const char* fstring, const unsigned int value)
+void rv_printd(const char* fstring, const unsigned long long value)
 {
   char* cur_c = (char*)fstring;
   while (*cur_c != '\0')
