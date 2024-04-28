@@ -17,7 +17,7 @@ void rvmisa_test() {
     //int value = get_misa_base_width(a);
     rv_printd("STEP: %u\n\r", b);
     unsigned long long xlen = get_misa_xlen();
-    rv_printd("XLEN: %u\n\r!!!", xlen);
+    rv_printd("XLEN: %u\n\r", xlen);
     return 0;
     
 }
