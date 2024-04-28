@@ -1,6 +1,8 @@
 #ifndef UART
 #define UART
 
+#include "../hdr/memory.h"
+
 #define UART_BASE 0x10000000
 #define UART_THR ( UART_BASE + 0x0 )
 #define UART_RBR ( UART_BASE + 0x0 )
@@ -18,8 +20,8 @@
 #define RECEIVED_DATA_AVAILIABLE    0x01
 #define TRANSMITTER_REGISTER_EMPTY  0x02
 
-void uart_interrupt_enable(const unsigned char flags);
-void uart_interrupt_disable(const unsigned char flags);
+#define UART_INTERRUPT_ENABLE(flags) WRITE_TO_MEMORY(flags, UART_IER)
+#define UART_INTERRUPT_DISABLE(flags) WRITE_TO_MEMORY(flags, UART_IER)
 
 #endif
 
