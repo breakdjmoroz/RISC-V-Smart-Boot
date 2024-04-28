@@ -1,15 +1,22 @@
+#include "../hdr/uart.h"
 #include "../hdr/rvio.h"
 #include "../hdr/rvmath.h"
 
 void rv_putc(const char c)
 {
+#define address(num) to_str(num)
+#define to_str(num) #num
+
   __asm__
     (
-     "li a1, 0x10000000\n\t"
+     "li a1, " address(UART_THR) "\n\t"
      "sb %0, (a1)\n"
      :
      : "r" (c)
      );
+
+#undef to_str(num)
+#undef address(num)
 }
 
 void printstring(const char* string)

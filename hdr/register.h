@@ -14,12 +14,24 @@
 #define MSCRATCH "mscratch"
 #define MVENDORID "mvendorid"
 
+#define csr_read(csr) ({                      \
+   register unsigned long v;                  \
+   __asm__ __volatile__                       \
+      (                                       \
+       "csrr %0, " csr                        \
+       : "=r"(v)                              \
+      );                                      \
+      v;                                      \
+    })
 
-
-#define csr_read(csr)({ register unsigned long v; __asm volatile("csrr %0, " csr : "=r"(v):: "memory");__v;})
-
-#define csr_write(csr, val) \
-    ({unsigned long __v = (unsigned long)(val);__asm volatile("csrw " csr ", %0":: "rK"(v): "memory");})
+#define csr_write(csr, val) ({                \
+    unsigned long v = (unsigned long)(val);   \
+    __asm__ __volatile__                      \
+      (                                       \
+       "csrw " csr ", %0"                     \
+       :                                      \
+       : "r"(v));                             \
+    })
 
 /*dont work normal*/
 /*#define csr_modify(csr, set_bit, bitpos)                                                            \
