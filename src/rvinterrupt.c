@@ -68,3 +68,24 @@ void print_mie(){
   rv_printd("MTIE (Machine Timer Interrupt Pending):    %u\n\r", (mie & (1 << 7)) != 0);
   rv_printd("MEIE (Machine External Interrupt Pending): %u\n\r", (mie & (1 << 11)) != 0);
 }
+
+void enable_interrupt()
+{
+  const int mie = csr_read(MIE);
+  csr_write(MIE, 0x0);
+
+  csr_write(MTVEC, (int*)handler);
+
+  csr_write(MSTATUS, csr_read(MSTATUS) | 1u << 3u);
+
+  csr_write(MIE, mie | 1u << 3u | 1u << 11u)
+}
+
+void disable_interrupt()
+{
+  csr_write(MTVEC, 0x0);
+
+  csr_write(MSTATUS, csr_read(MSTATUS) & !(1u << 3u));
+
+  csr_write(MIE, csr_read(MIE) & !(1u << 3u) & !(1u << 11u));
+}
