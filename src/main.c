@@ -1,6 +1,21 @@
 #include "../hdr/rvio.h"
 #include "../hdr/tests.h"
 
+void main_loop();
+void end_main();
+void test();
+
+int main()
+{
+  test();
+
+  main_loop();
+
+  end_main();
+
+  return 0;
+}
+
 void test()
 {
   rvio_test();
@@ -16,10 +31,19 @@ void test()
   rvmisa_test();
   rvmhartid_test();
   mip_enable_test();
+  uart_test();
 }
 
-int main()
+void end_main()
+{  
+  disable_interrupt();
+  rv_prints("The end!\n\r", "");
+  __asm__("end:\n\t");
+  __asm__("jal zero, end");
+}
+
+void main_loop()
 {
-  test();
-  return 0;
+  __asm__("loop:\n\t");
+  __asm__("jal zero, loop");
 }

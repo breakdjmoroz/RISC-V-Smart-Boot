@@ -1,5 +1,7 @@
 #include "../hdr/rvinterrupt.h"
 #include "../hdr/rvio.h"
+#include "../hdr/uart.h"
+#include "../hdr/memory.h"
 #include "../hdr/register.h"
 
 void print_mcause()
@@ -74,18 +76,55 @@ void enable_interrupt()
   const int mie = csr_read(MIE);
   csr_write(MIE, 0x0);
 
-  csr_write(MTVEC, (int*)handler);
+  csr_write(MTVEC, (void*)(handler));
 
-  csr_write(MSTATUS, csr_read(MSTATUS) | 1u << 3u);
+  csr_write(MSTATUS, csr_read(MSTATUS) | (1u << 3) | (1u << 1));
 
-  csr_write(MIE, mie | 1u << 3u | 1u << 11u)
+  csr_write(MIE, mie | (1u << 11) | (1u << 3) | (1u << 1) | (1u << 12));
 }
 
 void disable_interrupt()
 {
   csr_write(MTVEC, 0x0);
 
-  csr_write(MSTATUS, csr_read(MSTATUS) & !(1u << 3u));
+  csr_write(MSTATUS, csr_read(MSTATUS) & !(1u << 3u) & !(1u << 1));
 
-  csr_write(MIE, csr_read(MIE) & !(1u << 3u) & !(1u << 11u));
+  csr_write(MIE, csr_read(MIE) & !(1u << 3u) & !(1u << 11u) & !(1u << 1) & !(1u << 12));
+}
+
+void __attribute__((interrupt, aligned(16))) handler()
+{
+  disable_interrupt();
+
+  unsigned long long mcause = csr_read(MCAUSE);
+
+  if ((mcause & 0x8000000000000000) && (mcause & 0xB))
+  {
+    //UART Interrupt
+    unsigned char ch = READ_BYTE(UART_RBR);
+
+    if (ch == 0x1B)
+    {
+      __asm__ ("jal zero, end_main");
+    }
+
+    rv_putc(ch);
+
+  }
+  else if ((mcause & 0x8000000000000000) && (mcause & 0x7))
+  {
+    //Timer interrupt
+  }
+  /*else if ()
+  {
+    //Illegal address
+  }*/
+  else
+  {
+    rv_prints("Default interrupt handler\n\r", "");
+  }
+
+  enable_interrupt();
+
+  __asm__("jal zero, main_loop");
 }

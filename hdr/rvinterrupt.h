@@ -9,5 +9,7 @@ void print_mie();
 void enable_interrupt();
 void disable_interrupt();
 
+void __attribute__((interrupt, aligned(16))) handler();
+
 #endif
 
