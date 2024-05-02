@@ -1,11 +1,10 @@
 #include "../hdr/rvio.h"
+#include "../hdr/register.h"
 #include "../hdr/rvmisa.h"
 
 
 unsigned long long get_misa() {
-    unsigned long long misa;
-    __asm__ __volatile__ ("csrr %0, misa" : "=r" (misa));
-    return misa;
+    return csr_read(MISA);
 }
 
 void print_misa() {
@@ -65,15 +64,21 @@ int get_misa_xlen() {
         "determine_base_width:\n\t"
         "bltz a0, misa_negative\n\t"  // Переход, если misa отрицательное
         "li a0, 0\n\t"  // Установка базовой ширины в 0 
-        "ret\n\t"  
+        "jal zero, end\n\t"
+        
         "misa_negative:\n\t"
         "slli a0, a0, 1\n\t"  // Сдвиг значения misa на один бит влево
         "bltz a0, misa_negative_shifted\n\t"  
         "li a0, 64\n\t"  // Установка базовой ширины в 64
-        "ret\n\t"  
+        "jal zero, end\n\t"
+
         "misa_negative_shifted:\n\t"
         "li a0, 32\n\t"  // Установка базовой ширины в 32
-        "ret\n\t"  
+        "jal zero, end\n\t"
+
+        "end:\n\t"
+        "add %0, zero, a0\n\t"
+        : "+r" (base_width)
     );
 
     // Возвращаем значение базовой ширины

@@ -6,7 +6,7 @@
 void rv_putc(const char c)
 {
 
-  WRITE_TO_MEMORY(c, UART_THR);
+  WRITE_BYTE(c, UART_THR);
 
 }
 
