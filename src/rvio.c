@@ -1,15 +1,13 @@
+#include "../hdr/uart.h"
+#include "../hdr/memory.h"
 #include "../hdr/rvio.h"
 #include "../hdr/rvmath.h"
 
 void rv_putc(const char c)
 {
-  __asm__
-    (
-     "li a1, 0x10000000\n\t"
-     "sb %0, (a1)\n"
-     :
-     : "r" (c)
-     );
+
+  WRITE_BYTE(c, UART_THR);
+
 }
 
 void printstring(const char* string)

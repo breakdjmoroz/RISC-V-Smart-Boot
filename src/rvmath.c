@@ -1,49 +1,60 @@
 #include "../hdr/rvmath.h"
 
+unsigned long long div_dec(const unsigned long long number)  
+{
+  unsigned long long temp = (number >> 1) + (number >> 2);
+  
+  temp += temp >> 4;
+  temp += temp >> 8;
+  temp += temp >> 16;
+  temp += temp >> 32;
+
+  return temp >> 3;
+}
+
 unsigned long long i_div(const unsigned long long a, const unsigned long long b)  
 {
-  unsigned long long result = (unsigned long long)a;
-  __asm__
-    (
-     	"div:\n\t"
-	"ADD a0, zero, %0\n\t"
-	"ADD a1, zero, %1\n\t"
-	"ADDI a2, zero, 0x0\n\t"
+  unsigned long long result = 0;
 
-	  
-	"loop_div:\n\t"
-	"BLTU a0, a1, end_div\n\t"
-	"SUB a0, a0, a1\n\t"
-	"ADDI a2, a2, 1\n\t"
-	"JAL zero, loop_div\n\t"
+  switch(b)
+  {
+    case DEC_BASE:
+      result = div_dec(a);
+      break;
+    case BIN_BASE:
+      result = a >> 1;
+      break;
+    case HEX_BASE:
+      result = a >> 4;
+      break;
+    default:
+      rv_prints("This base is unsupported.\n\r", "");
+  }
 
-	"end_div:\n\t"
-	"ADD %0, zero, a2\n\t"
-  : "+r" (result)
-  : "r" (b)
-     );
+
   return result;
 }
 
 unsigned long long i_mod(const unsigned long long a,const unsigned long long b)
 {
-  unsigned long long result = (unsigned long long)a;
-  __asm__
-    (
-     	"mod:\n\t"
-	"ADD t0, zero, %0\n\t"
-	"ADD t1, zero, %1\n\t"
+  unsigned long long result = 0;
 
-	"loop_mod:"
-	"BLTU t0, t1, end_mod\n\t"
-	"SUB t0, t0, t1\n\t"
-	"JAL zero, loop_mod\n\t"
-
-	"end_mod:\n\t"
-	"ADD %0, zero, t0\n\t"
-  : "+r" (result)
-  : "r" (b)
-     );
+  switch(b)
+  {
+    case DEC_BASE:
+      unsigned long long temp = div_dec(a);
+      temp = a - ((temp << 3) + (temp << 1));
+      result = (temp > 9)? temp - DEC_BASE : temp;
+      break;
+    case BIN_BASE:
+      result = a & 1;
+      break;
+    case HEX_BASE:
+      result = a & 15;
+      break;
+    default:
+      rv_prints("This base is unsupported.\n\r", "");
+  }
 
   return result;
 }
