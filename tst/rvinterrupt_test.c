@@ -17,7 +17,20 @@ void mip_enable_test()
   print_mie();
 }
 
+void pending()
+{
+  __asm__("wfi\n\t");
+}
+
 void interrupt_test()
 {
+  enable_interrupt();
+
   uart_test();
+  //timer_test();
+  //address_exception_test();
+
+  pending();
+
+  disable_interrupt();
 }

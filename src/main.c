@@ -37,7 +37,6 @@ void test()
 
 void end_main()
 {  
-  disable_interrupt();
   rv_prints("The end!\n\r", "");
   __asm__("end:\n\t");
   __asm__("jal zero, end");

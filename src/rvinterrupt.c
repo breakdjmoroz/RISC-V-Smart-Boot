@@ -105,7 +105,9 @@ void __attribute__((interrupt, aligned(16))) handler()
 
     if (ch == 0x1B)
     {
-      __asm__ ("jal zero, end_main");
+      enable_interrupt();
+      //TODO: change "pending" to "timer_test"
+      __asm__ ("jal zero, pending");
     }
 
     rv_putc(ch);
@@ -126,5 +128,5 @@ void __attribute__((interrupt, aligned(16))) handler()
 
   enable_interrupt();
 
-  __asm__("jal zero, main_loop");
+  __asm__("jal zero, pending");
 }
