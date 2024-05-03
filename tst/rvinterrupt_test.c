@@ -1,5 +1,6 @@
 #include "../hdr/rvinterrupt_test.h"
 #include "../hdr/rvinterrupt.h"
+#include "../hdr/uart_test.h"
 
 void mcause_test()
 {
@@ -14,4 +15,22 @@ void mip_enable_test()
 {
   print_mip();
   print_mie();
+}
+
+void pending()
+{
+  __asm__("wfi\n\t");
+}
+
+void interrupt_test()
+{
+  enable_interrupt();
+
+  uart_test();
+  //timer_test();
+  //address_exception_test();
+
+  pending();
+
+  disable_interrupt();
 }
