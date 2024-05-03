@@ -25,8 +25,6 @@ void uart_test()
   unsigned char* reg = (unsigned char*)UART_IER;
   rv_printd("ier is: %x\n\r", *reg);
 
-  enable_interrupt();
-
   rv_prints("iterrupt has enabled!\n\r", "");
   print_mie();
 

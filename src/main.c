@@ -31,12 +31,12 @@ void test()
   rvmisa_test();
   rvmhartid_test();
   mip_enable_test();
-  uart_test();
+
+  interrupt_test();
 }
 
 void end_main()
 {  
-  disable_interrupt();
   rv_prints("The end!\n\r", "");
   __asm__("end:\n\t");
   __asm__("jal zero, end");
