@@ -102,14 +102,6 @@ void __attribute__((interrupt, aligned(16))) handler()
   {
     //UART Interrupt
     unsigned char ch = READ_BYTE(UART_RBR);
-
-    if (ch == 0x1B)
-    {
-      enable_interrupt();
-      //TODO: change "pending" to "timer_test"
-      __asm__ ("jal zero, pending");
-    }
-
     rv_putc(ch);
 
   }
