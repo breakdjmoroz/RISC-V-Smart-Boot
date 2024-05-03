@@ -31,7 +31,8 @@ void test()
   rvmisa_test();
   rvmhartid_test();
   mip_enable_test();
-  uart_test();
+
+  interrupt_test();
 }
 
 void end_main()
