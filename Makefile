@@ -11,7 +11,7 @@ AS_LDSCRIPT=entry.ld
 
 																		#architecture configuration
 MABI=lp64
-MARCH=rv64i_zicsr
+MARCH=rv64im_zicsr
 TARGET=elf64-littleriscv
 
 EMU=qemu-system-riscv64
@@ -30,7 +30,7 @@ GCC_CFLAGS=-mcmodel=medany -march=$(MARCH) -mabi=$(MABI) -g -c
 GCC_LFLAGS=-b $(TARGET) -T $(GCC_LDSCRIPT)
 AS_CFLAGS=-march=$(MARCH) -mabi=$(MABI) -c
 AS_LFLAGS=-b $(TARGET) -T $(AS_LDSCRIPT)
-EMU_FLAGS=-machine $(EMU_MACHINE)
+EMU_FLAGS=-M $(EMU_MACHINE)
 
 SOURCE=$(wildcard $(SOURCE_DIR)/*.c)
 TESTSRC=$(wildcard $(TEST_DIR)/*.c)
