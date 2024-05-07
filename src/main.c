@@ -1,17 +1,10 @@
-#include "../hdr/rvio.h"
 #include "../hdr/tests.h"
 
-void main_loop();
-void end_main();
 void test();
 
 int main()
 {
   test();
-
-  main_loop();
-
-  end_main();
 
   return 0;
 }
@@ -35,15 +28,3 @@ void test()
   interrupt_test();
 }
 
-void end_main()
-{  
-  rv_prints("The end!\n\r", "");
-  __asm__("end:\n\t");
-  __asm__("jal zero, end");
-}
-
-void main_loop()
-{
-  __asm__("loop:\n\t");
-  __asm__("jal zero, loop");
-}
