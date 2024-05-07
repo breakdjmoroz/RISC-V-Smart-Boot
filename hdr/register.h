@@ -4,6 +4,7 @@
 #define MIP "mip"
 #define MIE "mie"
 #define MISA "misa"
+#define MEPC "mepc"
 #define MTVAL "mtval"
 #define MTVEC "mtvec"
 #define MCAUSE "mcause"
