@@ -1,7 +1,6 @@
-#include "../hdr/timer.h"
-#include "../hdr/timer_test.h"
+#include "../hdr/register.h"
+#include "../hdr/rvinterrupt.h"
 
-void timer_test()
-{
-
+void timer_test(){
+  set_cmp(10000000);
 }
