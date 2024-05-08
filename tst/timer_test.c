@@ -2,5 +2,5 @@
 #include "../hdr/rvinterrupt.h"
 
 void timer_test(){
-  set_cmp(10000000);
+    set_cmp(10000000);
 }
