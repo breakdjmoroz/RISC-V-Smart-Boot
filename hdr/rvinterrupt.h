@@ -1,6 +1,7 @@
 #ifndef INTERRUPT
 #define INTERRUPT
 
+void set_cmp();
 void print_mcause();
 void print_mepc();
 void print_mip();
