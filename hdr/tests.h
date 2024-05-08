@@ -7,5 +7,6 @@
 #include "../hdr/rvmath_test.h"
 #include "../hdr/rvinterrupt_test.h"
 #include "../hdr/uart_test.h"
+#include "../hdr/timer_test.h"
 
 #endif
