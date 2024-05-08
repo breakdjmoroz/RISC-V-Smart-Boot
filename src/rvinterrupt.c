@@ -75,50 +75,50 @@ void print_mie(){
 void enable_interrupt()
 {
   const int mie = csr_read(MIE);
-  csr_write(MIE, 0x0);
 
   csr_write(MTVEC, (void*)(handler));
 
+  csr_write(MIE, 0x0);
+
   csr_write(MSTATUS, csr_read(MSTATUS) | (1u << 3) | (1u << 1));
 
-  csr_write(MIE, mie | (1u << 11) | (1u << 3) | (1u << 1) | (1u << 12) | (1u << 7));
+  csr_write(MIE, mie | (1u << 11));
 }
 
 void disable_interrupt()
 {
   csr_write(MTVEC, 0x0);
 
-  csr_write(MSTATUS, csr_read(MSTATUS) & !(1u << 3u) & !(1u << 1));
+  csr_write(MSTATUS, csr_read(MSTATUS) & !(1u << 3) & !(1u << 1));
 
-  csr_write(MIE, csr_read(MIE) & !(1u << 3u) & !(1u << 11u) & !(1u << 1) & !(1u << 12) & !(1u << 7));
+  csr_write(MIE, csr_read(MIE) & !(1u << 11) & !(1u << 7));
 }
 
-void set_cmp(interval){
+void set_cmp(interval)
+{
   volatile unsigned long long* MTIME = (volatile unsigned long long*)MTIME_ADDR;
   volatile unsigned long long* MTIMECMP = (volatile unsigned long long*)MTIMECMP_ADDR;
   *MTIMECMP = *MTIME + interval;
+
+  csr_write(MIE, csr_read(MIE) | (1u << 7));
 }  
 
 void __attribute__((interrupt, aligned(16))) handler()
 {
   disable_interrupt();
 
-  //rv_prints("I am now in handler!\n\r", "");
-  
   unsigned long long mcause = csr_read(MCAUSE);
-  
-  //rv_printd("MCAUSE is %x\n\r", mcause);
   
   if (mcause == 0x800000000000000B)
   {
     //UART Interrupt
-    //rv_prints("I am now in UART handler!\n\r", "");
     unsigned char ch = READ_BYTE(UART_RBR);
     rv_putc(ch);
-
+    csr_write(MIE, csr_read(MIE) | (1u << 7));
   }
   else if (mcause == 0x8000000000000007)
   {
+    //Timer Interrupt
     rv_prints("I am now in timer handler!\n\r", "");
     set_cmp(10000000);
   }
