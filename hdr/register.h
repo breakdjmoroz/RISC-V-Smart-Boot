@@ -14,6 +14,10 @@
 #define MSTATUS "mstatus"
 #define MSCRATCH "mscratch"
 #define MVENDORID "mvendorid"
+#define MTIME_ADDR (0x0200BFF8)
+#define MTIMECMP_ADDR (0x02004000) 
+extern volatile unsigned long long* MTIME;
+extern volatile unsigned long long* MTIMECMP;
 
 #define csr_read(csr) ({                      \
    register unsigned long v;                  \
