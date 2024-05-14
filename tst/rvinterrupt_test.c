@@ -3,7 +3,7 @@
 #include "../hdr/rvinterrupt.h"
 #include "../hdr/uart_test.h"
 #include "../hdr/timer_test.h"
-//#include "../hdr/address_exception_test.h"
+#include "../hdr/store_access_test.h"
 
 void mcause_test()
 {
@@ -31,7 +31,7 @@ void interrupt_test()
 
   uart_test();
   timer_test();
-  //address_exception_test();
+  store_access_test();
 
   pending();
   
