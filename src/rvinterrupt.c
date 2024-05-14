@@ -122,10 +122,17 @@ void __attribute__((interrupt, aligned(16))) handler()
     rv_prints("I am now in timer handler!\n\r", "");
     set_cmp(10000000);
   }
-  /*else if ()
+  else if(mcause == 0x8000000000000000)
   {
-    //Illegal address
-  }*/
+    //Invalid adress
+    asm volatile("csrr %0, mcause" : "=r" (mcause));
+
+    if((mcause & (1u << 30)) && (mcause & 0x7F) == 0x6){
+      rv_prints("Illegal adress detected!\n");
+
+      exit(1);
+    }
+  }
   else
   {
     rv_prints("Default interrupt handler\n\r", "");
