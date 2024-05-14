@@ -109,29 +109,23 @@ void __attribute__((interrupt, aligned(16))) handler()
 
   unsigned long long mcause = csr_read(MCAUSE);
   
-  if (mcause == 0x800000000000000B)
+  if (mcause == UART_INTERRUPT)
   {
     //UART Interrupt
     unsigned char ch = READ_BYTE(UART_RBR);
     rv_putc(ch);
     csr_write(MIE, csr_read(MIE) | (1u << 7));
   }
-  else if (mcause == 0x8000000000000007)
+  else if (mcause == TIMER_INTERRUPT)
   {
     //Timer Interrupt
     rv_prints("I am now in timer handler!\n\r", "");
     set_cmp(10000000);
   }
-  else if(mcause == 0x8000000000000000)
+  else if(mcause == STORE_ACCESS_EXCEPTION)
   {
     //Invalid adress
-    asm volatile("csrr %0, mcause" : "=r" (mcause));
-
-    if((mcause & (1u << 30)) && (mcause & 0x7F) == 0x6){
-      rv_prints("Illegal adress detected!\n");
-
-      exit(1);
-    }
+    rv_prints("Illegal adress detected!\n\r", "");
   }
   else
   {
