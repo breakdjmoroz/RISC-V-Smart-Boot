@@ -8,5 +8,6 @@
 #include "../hdr/rvinterrupt_test.h"
 #include "../hdr/uart_test.h"
 #include "../hdr/timer_test.h"
+#include "../hdr/store_access_test.h"
 
 #endif
