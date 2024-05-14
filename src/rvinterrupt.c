@@ -125,7 +125,7 @@ void __attribute__((interrupt, aligned(16))) handler()
   else if(mcause == STORE_ACCESS_EXCEPTION)
   {
     //Invalid adress
-    rv_prints("Illegal adress detected!\n\r", "");
+    rv_prints("Store access denied!\n\r", "");
   }
   else
   {
