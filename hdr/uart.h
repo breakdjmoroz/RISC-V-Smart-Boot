@@ -3,7 +3,8 @@
 
 #include "../hdr/memory.h"
 
-#define UART_BASE 0x10000000
+#ifdef UART_BASE
+
 #define UART_THR ( UART_BASE + 0x0 )
 #define UART_RBR ( UART_BASE + 0x0 )
 #define UART_DLL ( UART_BASE + 0x0 )
@@ -22,6 +23,10 @@
 
 #define UART_INTERRUPT_ENABLE(flags) WRITE_BYTE(flags, UART_IER)
 #define UART_INTERRUPT_DISABLE(flags) WRITE_BYTE(flags, UART_IER)
+
+#else
+#pragma GCC error "UART address is undefined"
+#endif
 
 #endif
 
