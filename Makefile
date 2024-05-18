@@ -1,6 +1,13 @@
 PROGRAM_NAME=smartboot.out
 ENTRY_NAME=fsbl.out
 
+																		#predefined macros
+ENTRY_ADDR=0x80000000
+BOOT_SPACE=0x80001000
+UART_BASE=0x10000000
+MTIME_ADDR=0x0200BFF8
+MTIMECMP_ADDR=0x02004000
+
 AS=riscv64-unknown-elf-as
 GCC=riscv64-unknown-elf-gcc
 LD=riscv64-unknown-elf-ld
@@ -8,6 +15,8 @@ LD=riscv64-unknown-elf-ld
 																		#ld scripts
 GCC_LDSCRIPT=main.ld
 AS_LDSCRIPT=entry.ld
+GCC_LDSOURCE=main
+AS_LDSOURCE=entry
 
 																		#architecture configuration
 MABI=lp64
@@ -44,12 +53,14 @@ all: compile link run
 build: compile link
 
 link: generate_dir compile
-	$(LD) $(GCC_LFLAGS) $(OBJECT_DIR)/$(OBJECT) -o $(EXECUT_DIR)/$(PROGRAM_NAME)
+	$(GCC) -E -P -x c -DENTRY_ADDR=$(ENTRY_ADDR) $(AS_LDSOURCE) > $(AS_LDSCRIPT)
+	$(GCC) -E -P -x c -DBOOT_SPACE=$(BOOT_SPACE) $(GCC_LDSOURCE) > $(GCC_LDSCRIPT)
+	$(LD)  $(GCC_LFLAGS) $(OBJECT_DIR)/$(OBJECT) -o $(EXECUT_DIR)/$(PROGRAM_NAME)
 	$(LD) $(AS_LFLAGS) $(OBJECT_DIR)/$(ASMOBJ) -o $(EXECUT_DIR)/$(ENTRY_NAME)
 
 compile:
-	$(foreach SRC, $(SOURCE), $(GCC) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.c=$(OBJECT_DIR)/%.o);)
-	$(foreach SRC, $(TESTSRC), $(GCC) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(TEST_DIR)/%.c=$(OBJECT_DIR)/%.o);)
+	$(foreach SRC, $(SOURCE), $(GCC) -DMTIME_ADDR=$(MTIME_ADDR) -DMTIMECMP_ADDR=$(MTIMECMP_ADDR) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.c=$(OBJECT_DIR)/%.o);)
+	$(foreach SRC, $(TESTSRC), $(GCC) -DUART_BASE=$(UART_BASE) -DMTIME_ADDR=$(MTIME_ADDR) -DMTIMECMP_ADDR=$(MTIMECMP_ADDR) $(GCC_CFLAGS) $(SRC) -o $(SRC:$(TEST_DIR)/%.c=$(OBJECT_DIR)/%.o);)
 	$(foreach SRC, $(ASMSRC), $(AS) $(AS_CFLAGS) $(SRC) -o $(SRC:$(SOURCE_DIR)/%.s=$(OBJECT_DIR)/%.obj);)
 
 run: compile link

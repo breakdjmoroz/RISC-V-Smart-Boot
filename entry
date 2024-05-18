@@ -1,0 +1,16 @@
+#ifdef ENTRY_ADDR
+
+MEMORY
+{
+	entry (rwx) : ORIGIN = ENTRY_ADDR, LENGTH = 64 
+}
+
+SECTIONS
+{
+	.text : {*.obj(.text)} > entry
+}
+
+#else
+#pragma	GCC error "Define an entry address!"
+#endif
+
